@@ -14,5 +14,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layout.beranda');
+});
+
+Route::get('/data-ispu', function () {
+    return view('layout.dataispu');
+});
+
+Route::get('/latih-data', function () {
+    return view('layout.latihdata');
+});
+
+Route::get('/login', function () {
+    return view('auth.login');
+});
+
+Route::get('/registrasi', function () {
+    return view('auth.registrasi');
+});
+
+Route::get('/data-ispu/tambah-data', function () {
+    return view('layout.dataispu-add');
 });
