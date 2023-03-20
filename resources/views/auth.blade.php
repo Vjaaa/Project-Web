@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 
 <head>
     <meta charset="utf-8" />
@@ -20,7 +20,13 @@
 
 
 <body class="authentication-bg bg-primary">
-    {{ $slot }}
+    <x-preloader />
+    <div class="home-center">
+        <div class="home-desc-center">
+            {{ $slot }}
+        </div>
+        <!-- End Log In page -->
+    </div>
 
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
@@ -28,6 +34,10 @@
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+
+    <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
 </body>
