@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\DataIspuController;
+use App\Http\Controllers\LatihDataController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,26 +17,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('layout.beranda');
+Route::middleware('auth')->group(function () {
+    Route::get('', BerandaController::class)->name('beranda');
+
+    Route::get('data-ispu', [DataIspuController::class, 'index'])->name('data-ispu.index');
+    Route::get('data-ispu/tambah-data', [DataIspuController::class, 'create'])->name('data-ispu.create');
+    Route::post('data-ispu', [DataIspuController::class, 'store'])->name('data-ispu.store');
+    Route::get('data-ispu/{dataIspu:tanggal}/edit-data', [DataIspuController::class, 'edit'])->name('data-ispu.edit');
+    Route::put('data-ispu/{id}', [DataIspuController::class, 'update'])->name('data-ispu.update');
+    Route::delete('data-ispu/{id}', [DataIspuController::class, 'destroy'])->name('data-ispu.destroy');
+
+    Route::get('latih-data', [LatihDataController::class, 'index'])->name('latih-data.index');
+    Route::post('latih-data', [LatihDataController::class, 'store'])->name('latih-data.store');
+
+    Route::post('logout', [LoginController::class, 'logout'])->name('login.logout');
 });
 
-Route::get('/data-ispu', function () {
-    return view('layout.dataispu');
+Route::middleware('guest')->group(function () {
+    Route::get('login', [LoginController::class, 'index'])->name('login');
+    Route::post('login', [LoginController::class, 'authenticate'])->name('login.auth');
 });
 
-Route::get('/latih-data', function () {
-    return view('layout.latihdata');
-});
-
-Route::get('/login', function () {
-    return view('auth.login');
-});
-
-Route::get('/registrasi', function () {
-    return view('auth.registrasi');
-});
-
-Route::get('/data-ispu/tambah-data', function () {
-    return view('layout.dataispu-add');
-});
+// Route::get('registrasi', function () {
+//     return view('auth.registrasi');
+// });
