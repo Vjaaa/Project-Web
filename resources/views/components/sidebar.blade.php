@@ -35,6 +35,12 @@
                         <span>Latih Data ISPU</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('akurasi.index') }}" class="waves-effect">
+                        <i class="dripicons-graph-bar"></i>
+                        <span>Akurasi nilai k</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
