@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AkurasiController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DataIspuController;
 use App\Http\Controllers\LatihDataController;
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('latih-data', [LatihDataController::class, 'index'])->name('latih-data.index');
     Route::post('latih-data', [LatihDataController::class, 'store'])->name('latih-data.store');
+
+    Route::get('akurasi', AkurasiController::class)->name('akurasi.index');
 
     Route::post('logout', [LoginController::class, 'logout'])->name('login.logout');
 });
