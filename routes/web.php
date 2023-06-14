@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('latih-data', [LatihDataController::class, 'index'])->name('latih-data.index');
     Route::post('latih-data', [LatihDataController::class, 'store'])->name('latih-data.store');
+    Route::get('latih-data/download', [LatihDataController::class, 'download'])->name('latih-data.download');
 
     Route::get('akurasi', AkurasiController::class)->name('akurasi.index');
 
@@ -40,7 +41,3 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'authenticate'])->name('login.auth');
 });
-
-// Route::get('registrasi', function () {
-//     return view('auth.registrasi');
-// });
