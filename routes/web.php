@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AkurasiController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\DataIspuController;
 use App\Http\Controllers\LatihDataController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PerhitunganController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('latih-data', [LatihDataController::class, 'store'])->name('latih-data.store');
     Route::get('latih-data/download', [LatihDataController::class, 'download'])->name('latih-data.download');
 
-    Route::get('akurasi', AkurasiController::class)->name('akurasi.index');
+    Route::get('perhitungan', PerhitunganController::class)->name('perhitungan.index');
 
     Route::post('logout', [LoginController::class, 'logout'])->name('login.logout');
 });
