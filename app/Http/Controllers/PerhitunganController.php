@@ -11,7 +11,6 @@ class PerhitunganController extends Controller
     {
         $data = DB::table('data_ispus')->where('status_data', 'Data Latih')->get();
 
-        // if ($data) {
         $samples = [];
         $labels = [];
         foreach ($data as $row) {
@@ -62,16 +61,10 @@ class PerhitunganController extends Controller
         $average = $lmdwknn->average($test_labels, $prediksi);
         $support = $lmdwknn->support($test_labels, $prediksi);
 
-        dd($confusion_matrix);
         return view('layout.perhitungan.index', [
             'akurasi' => $akurasi,
             'confusion_matrix' => $confusion_matrix,
             'test_k' => $test_k,
         ]);
-        // } else {
-        //     return view('layout.perhitungan.index', [
-        //         'error' => "Tidak ada data",
-        //     ]);
-        // }
     }
 }
