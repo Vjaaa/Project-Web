@@ -89,18 +89,28 @@
                                                             <td>{{ $dataIspu->lokasi }}</td>
                                                             <td>{{ $dataIspu->status_data }}</td>
                                                             <td class="d-flex">
-                                                                <a href="{{ route('data-ispu.edit', $dataIspu) }}">
-                                                                    <button type="button" class="me-1 text-primary" style="border: none; background: none; line-height: normal;">
-                                                                        <i class="mdi mdi-pencil font-size-18"></i>
-                                                                    </button>
-                                                                </a>
-                                                                <form action="{{ route('data-ispu.destroy', $dataIspu) }}" method="post">
-                                                                    @method('delete')
-                                                                    @csrf
-                                                                    <button type="submit" class="ms-1 text-danger" style="border: none; background: none; line-height: normal;">
-                                                                        <i class="mdi mdi-trash-can font-size-18"></i>
-                                                                    </button>
-                                                                </form>
+                                                                @if ($dataIspu->status_data == 'Data Uji')
+                                                                    <a href="{{ route('data-ispu.edit', $dataIspu) }}">
+                                                                        <button type="button" class="me-1 text-primary" style="border: none; background: none; line-height: normal;">
+                                                                            <i class="mdi mdi-pencil font-size-18"></i>
+                                                                        </button>
+                                                                    </a>
+                                                                    <form action="{{ route('data-ispu.destroy', $dataIspu) }}" method="post">
+                                                                        @method('delete')
+                                                                        @csrf
+                                                                        <button type="submit" class="ms-1 text-danger" style="border: none; background: none; line-height: normal;">
+                                                                            <i class="mdi mdi-trash-can font-size-18"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                @else
+                                                                    <form action="{{ route('data-ispu.destroy', $dataIspu) }}" method="post">
+                                                                        @method('delete')
+                                                                        @csrf
+                                                                        <button type="submit" class="me-1 text-danger" style="border: none; background: none; line-height: normal;">
+                                                                            <i class="mdi mdi-trash-can font-size-18"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                @endif
                                                             </td>
                                                         </tr>
                                                     @endforeach

@@ -38,7 +38,7 @@
                                                 <div class="col-lg-5 col-md-5 col-sm-5">
                                                     <div class="mb-3">
                                                         <label for="pm10" class="form-label">Nilai PM<sub>10</sub></label>
-                                                        <input type="number" class="form-control @error('pm10') is-invalid @enderror" name="pm10" id="pm10" value="{{ $dataIspu->pm10 ?? old('pm10') }}" required>
+                                                        <input type="number" class="input-number form-control @error('pm10') is-invalid @enderror" oninput="updateMaxValue()" name="pm10" id="pm10" value="{{ $dataIspu->pm10 ?? old('pm10') }}" required>
                                                         @error('pm10')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -47,7 +47,7 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="so2" class="form-label">Nilai SO<sub>2</sub></label>
-                                                        <input type="number" class="form-control @error('so2') is-invalid @enderror" name="so2" id="so2" value="{{ $dataIspu->so2 ?? old('so2') }}" required>
+                                                        <input type="number" class="input-number form-control @error('so2') is-invalid @enderror" oninput="updateMaxValue()" name="so2" id="so2" value="{{ $dataIspu->so2 ?? old('so2') }}" required>
                                                         @error('so2')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -56,7 +56,7 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="co" class="form-label">Nilai CO</label>
-                                                        <input type="number" class="form-control @error('co') is-invalid @enderror" name="co" id="co" value="{{ $dataIspu->co ?? old('co') }}" required>
+                                                        <input type="number" class="input-number form-control @error('co') is-invalid @enderror" oninput="updateMaxValue()" name="co" id="co" value="{{ $dataIspu->co ?? old('co') }}" required>
                                                         @error('co')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -65,7 +65,7 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="o3" class="form-label">Nilai O<sub>3</sub></label>
-                                                        <input type="number" class="form-control @error('o3') is-invalid @enderror" name="o3" id="o3" value="{{ $dataIspu->o3 ?? old('o3') }}" required>
+                                                        <input type="number" class="input-number form-control @error('o3') is-invalid @enderror" oninput="updateMaxValue()" name="o3" id="o3" value="{{ $dataIspu->o3 ?? old('o3') }}" required>
                                                         @error('o3')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -74,7 +74,7 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="no2" class="form-label">Nilai NO<sub>2</sub></label>
-                                                        <input type="number" class="form-control @error('no2') is-invalid @enderror" name="no2" id="no2" value="{{ $dataIspu->no2 ?? old('no2') }}" required>
+                                                        <input type="number" class="input-number form-control @error('no2') is-invalid @enderror" oninput="updateMaxValue()" name="no2" id="no2" value="{{ $dataIspu->no2 ?? old('no2') }}" required>
                                                         @error('no2')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -86,7 +86,7 @@
                                                     <div class="mb-3">
                                                         <label for="tanggal" class="form-label">Tanggal</label>
                                                         <div class="input-group" id="datepicker2">
-                                                            <input type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal" value="{{ $dataIspu->tanggal ?? old('tanggal') }}" placeholder="tahun-bulan-tanggal" data-date-format="yyyy-mm-dd" data-date-container='' data-provide="datepicker" data-date-autoclose="true" required readonly>
+                                                            <input type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal" value="{{ $dataIspu->tanggal ?? old('tanggal') }}" placeholder="tahun-bulan-tanggal" data-date-format="yyyy-mm-dd" data-date-container='' data-provide="datepicker" data-date-autoclose="true" required>
                                                             <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                                                             @error('tanggal')
                                                                 <div class="invalid-feedback">
@@ -115,11 +115,11 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="max" class="form-label">Max</label>
-                                                        <input type="number" class="form-control" name="max" id="max" value="{{ $dataIspu->max ?? 0 }}" readonly required>
+                                                        <input type="number" class="form-control" name="max" id="max" value="{{ $dataIspu->max ?? 0 }}" readonly>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="critical" class="form-label">Critical</label>
-                                                        <input type="text" class="form-control" name="critical" id="critical" value="{{ $dataIspu->critical ?? 'PM10' }}" placeholder="PM10" readonly required>
+                                                        <input type="text" class="form-control" name="critical" id="critical" value="{{ $dataIspu->critical ?? 'PM10' }}" placeholder="PM10" readonly>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" class="form-control" name="categori" value="{{ $dataIspu->categori ?? 'Sangat Tidak Sehat' }}">
@@ -148,4 +148,38 @@
             <x-footer />
         </div>
     </div>
+    <script>
+        function updateMaxValue() {
+            var inputs = document.getElementsByClassName('input-number');
+            var maxValue = -Infinity;
+
+            var pm10 = parseInt(document.getElementById('pm10').value);
+            var so2 = parseInt(document.getElementById('so2').value);
+            var co = parseInt(document.getElementById('co').value);
+            var o3 = parseInt(document.getElementById('o3').value);
+            var no2 = parseInt(document.getElementById('no2').value);
+            var maxLabel = "";
+
+            // Mencari nilai terbesar di antara semua input
+            for (var i = 0; i < inputs.length; i++) {
+                var inputValue = parseInt(inputs[i].value);
+
+                // Memeriksa apakah nilai input adalah angka yang valid dan lebih besar dari nilai terbesar saat ini
+                if (!isNaN(inputValue) && inputValue > maxValue) {
+                    maxValue = inputValue;
+                }
+
+                // Cek label
+                if (maxValue == pm10) maxLabel = "PM10";
+                else if (maxValue == so2) maxLabel = "SO2";
+                else if (maxValue == co) maxLabel = "CO";
+                else if (maxValue == o3) maxLabel = "O3";
+                else if (maxValue == no2) maxLabel = "NO2";
+            }
+
+            // Mengisi form input dengan nilai terbesar
+            document.getElementById('max').value = maxValue;
+            document.getElementById('critical').value = maxLabel;
+        };
+    </script>
 </x-app>

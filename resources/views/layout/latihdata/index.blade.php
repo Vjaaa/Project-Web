@@ -31,48 +31,23 @@
                     <div class="page-content-wrapper">
                         <div class="row">
                             <div class="col-12">
-                                @if (session()->has('success'))
-                                    <div class="card alert alert-dismissible border border-dark p-0 mt-3 position-absolute" role="alert" style="left: 50%; transform: translate(-50%, -50%); z-index: 9998;">
-                                        <div class="card-header bg-soft-success">
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            <h5 class="font-size-16 text-success my-1">Success Alert</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="text-center">
-                                                <div class="mb-2">
-                                                    <i class="mdi mdi-checkbox-marked-circle-outline display-5 text-success"></i>
-                                                </div>
-                                                <h4 class="alert-heading font-size-18">Berhasil!</h4>
-                                                <span>{{ session('success') }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if (session()->has('error'))
-                                    <div class="card alert alert-dismissible border border-dark p-0 mt-3 position-absolute" role="alert" style="left: 50%; transform: translate(-50%, -50%); z-index: 9998;">
-                                        <div class="card-header bg-soft-danger">
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            <h5 class="font-size-16 text-danger my-1">Danger Alert</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="text-center">
-                                                <div class="mb-2">
-                                                    <i class="mdi mdi-checkbox-marked-circle-outline display-5 text-danger"></i>
-                                                </div>
-                                                <h4 class="alert-heading font-size-18">Gagal!</h4>
-                                                <span>{{ session('error') }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="header-title">Latih Data Baru</h4>
-                                        <p class="card-title-desc">Latih data baru dengan cara mengupload file ke dalam kotak yang disediakan untuk dijadikan sebagai data latih.</p>
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <h4 class="header-title">Latih Data Baru</h4>
+                                                <p class="card-title-desc">Latih data baru dengan cara mengupload file ke dalam kotak yang disediakan untuk dijadikan sebagai data latih.</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="text-end">
+                                                    <a href="{{ route('latih-data.download') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-file-download-outline me-2"></i>Download Template Excel</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <form action="{{ route('latih-data.store') }}" method="post" enctype="multipart/form-data" id="upload-file" class="dropzone" style="border: 2px dashed #ced4da;">
                                             @csrf
                                             <div class="fallback">
-                                                <input name="file" type="file">
+                                                <input type="file" id="file" name="file" accept=".csv">
                                             </div>
                                             <div class="dz-message needsclick">
                                                 <div class="mb-3">
@@ -107,6 +82,7 @@
                     autoProcessQueue: false,
                     dictRemoveFile: "Hapus file",
                     maxFiles: 20,
+                    maxFilesize: 102400,
                     parallelUploads: 20,
                     paramName: "file",
                     url: "{{ route('latih-data.store') }}",
