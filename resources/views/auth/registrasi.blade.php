@@ -1,4 +1,5 @@
 <x-auth title="Registrasi">
+    <x-preloader />
     <div class="home-center">
         <div class="home-desc-center">
             <div class="container">
@@ -42,7 +43,7 @@
                             <p>©
                                 <script>
                                     document.write(new Date().getFullYear())
-                                </script> Morvin. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign
+                                </script> Morvin. Crafted with <i class="mdi mdi-heart text-danger"></i>
                             </p>
                         </div>
                     </div>

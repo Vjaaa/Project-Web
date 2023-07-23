@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8" />
@@ -28,6 +28,10 @@
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
+
+    <script src="{{ asset('assets/libs/parsleyjs/parsley.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/pages/form-validation.init.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
 </body>

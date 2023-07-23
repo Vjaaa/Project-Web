@@ -30,17 +30,22 @@
                     <i class="mdi mdi-magnify"></i>
                 </button>
             </div>
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-7.jpg') }}" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1">James</span>
-                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                    <!-- item-->
-                    <a class="dropdown-item text-danger" href="#"><i class="mdi mdi-power font-size-16 align-middle me-1 text-danger"></i> Logout</a>
+            @auth
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/avatar-7.jpg') }}" alt="Header Avatar">
+                        <span class="d-none d-xl-inline-block ms-1">{{ auth()->user()->nama }}</span>
+                        <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <form action="{{ route('login.logout') }}" method="post">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger" href="#"><i class="mdi mdi-power font-size-16 align-middle me-1 text-danger"></i> Logout</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            @endauth
         </div>
     </div>
 </header>
