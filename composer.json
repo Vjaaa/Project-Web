@@ -12,7 +12,9 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "maatwebsite/excel": "^3.1",
-        "php-ai/php-ml": "^0.10.0"
+        "php-ai/php-ml": "^0.10.0",
+        "symfony/process": "^5.4",
+        "vitoutry-laravel/charts": "^0.0.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
