@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8" />
@@ -20,13 +20,7 @@
 
 
 <body class="authentication-bg bg-primary">
-    <x-preloader />
-    <div class="home-center">
-        <div class="home-desc-center">
-            {{ $slot }}
-        </div>
-        <!-- End Log In page -->
-    </div>
+    {{ $slot }}
 
     <!-- JAVASCRIPT -->
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>

@@ -36,9 +36,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('akurasi.index') }}" class="waves-effect">
+                    <a href="{{ route('perhitungan.index') }}" class="waves-effect">
                         <i class="dripicons-graph-bar"></i>
-                        <span>Akurasi nilai k</span>
+                        <span>Perhitungan</span>
                     </a>
                 </li>
             </ul>
