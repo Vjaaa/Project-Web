@@ -1,4 +1,4 @@
-<x-app title="Perhitungan berdasarkan nilai k">
+<x-app title="Perhitungan">
     <x-preloader />
     <div id="layout-wrapper">
         <x-header />
@@ -12,10 +12,10 @@
                         <div class="row align-items-center">
                             <div class="col-sm-6">
                                 <div class="page-title">
-                                    <h4>Perhitungan berdasarkan nilai k</h4>
+                                    <h4>Perhitungan</h4>
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="/">Sistem Klasifikasi ISPU</a></li>
-                                        <li class="breadcrumb-item active">Perhitungan berdasarkan nilai k</li>
+                                        <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item active">Perhitungan</li>
                                     </ol>
                                 </div>
                             </div>
@@ -27,22 +27,31 @@
                 <div class="container-fluid">
                     <div class="page-content-wrapper">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="header-title mb-4">Akurasi</h4>
-                                        <div id="column_chart_datalabel" class="apex-charts" dir="ltr"></div>
+                                        @if (!$data)
+                                            <p style="margin-bottom: 0.5rem">Tidak ada data.</p>
+                                        @else
+                                            <div id="column_chart_datalabel" class="apex-charts" dir="ltr"></div>
+                                        @endif
                                     </div>
                                 </div>
                                 <!--end card-->
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="header-title mb-4">Confusion Matrix</h4>
-                                        <div id="heatmap_chart" class="apex-charts" dir="ltr"></div>
+                                        @if (!$data)
+                                            <p style="margin-bottom: 0.5rem">Tidak ada data.</p>
+                                        @else
+                                            <div id="heatmap_chart" class="apex-charts" dir="ltr"></div>
+                                        @endif
                                     </div>
                                 </div>
+                                <!--end card-->
                             </div>
                         </div>
                         <!-- end row -->
@@ -54,194 +63,210 @@
             <x-footer />
         </div>
     </div>
-    @push('chart-js')
-        <!-- apexcharts -->
-        <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-        <script>
-            var options = {
-                chart: {
-                    height: 350,
-                    type: "bar",
-                    toolbar: {
-                        show: true
-                    }
-                },
-                plotOptions: {
-                    bar: {
-                        columnWidth: "60%",
-                        borderRadius: 5,
-                        borderRadiusApplication: 'end',
-                        dataLabels: {
-                            position: 'top'
-                        },
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    offsetY: -20,
-                },
-                series: [{
-                    name: "Akurasi",
-                    data: [({{ $akurasi[0] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[1] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[2] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[3] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[4] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[5] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[6] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[7] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[8] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[9] ?? 0 }} * 100).toFixed(2)]
-                }],
-                colors: ["#525ce5"],
-                xaxis: {
-                    title: {
-                        text: "Nilai k"
-                    },
-                    categories: [{{ $test_k[0] }}, {{ $test_k[1] }}, {{ $test_k[2] }}, {{ $test_k[3] }}, {{ $test_k[4] }}, {{ $test_k[5] }}, {{ $test_k[6] }}, {{ $test_k[7] }}, {{ $test_k[8] }}, {{ $test_k[9] }}],
-                },
-                yaxis: {
-                    title: {
-                        text: "Persentase (%)"
-                    }
-                },
-                fill: {
-                    opacity: 1
-                },
-                tooltip: {
-                    y: {
-                        formatter: function(e) {
-                            return e + "%"
+    @if ($data)
+        @push('chart-js')
+            <!-- apexcharts -->
+            <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+            <script>
+                var options = {
+                    chart: {
+                        height: 350,
+                        type: 'bar',
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true,
+                                selection: false,
+                                zoom: false,
+                                zoomin: false,
+                                zoomout: false,
+                                pan: false,
+                                reset: false,
+                            },
                         }
-                    }
-                },
-            };
-
-            var chart = new ApexCharts(document.querySelector("#column_chart_datalabel"), options)
-            chart.render();
-        </script>
-        <script>
-            var options = {
-                series: [{
-                        name: "Baik",
-                        data: [{
-                            x: 'Baik',
-                            y: {{ $confusion_matrix[0][0] ?? 0 }}
-                        }, {
-                            x: 'Sedang',
-                            y: {{ $confusion_matrix[0][1] ?? 0 }}
-                        }, {
-                            x: 'Tidak Sehat',
-                            y: {{ $confusion_matrix[0][2] ?? 0 }}
-                        }, {
-                            x: 'Sangat Tidak Sehat',
-                            y: {{ $confusion_matrix[0][3] ?? 0 }}
-                        }, {
-                            x: 'Berbahaya',
-                            y: {{ $confusion_matrix[0][4] ?? 0 }}
-                        }, ]
                     },
-                    {
-                        name: "Sedang",
-                        data: [{
-                            x: 'Baik',
-                            y: {{ $confusion_matrix[1][0] ?? 0 }}
-                        }, {
-                            x: 'Sedang',
-                            y: {{ $confusion_matrix[1][1] ?? 0 }}
-                        }, {
-                            x: 'Tidak Sehat',
-                            y: {{ $confusion_matrix[1][2] ?? 0 }}
-                        }, {
-                            x: 'Sangat Tidak Sehat',
-                            y: {{ $confusion_matrix[1][3] ?? 0 }}
-                        }, {
-                            x: 'Berbahaya',
-                            y: {{ $confusion_matrix[1][4] ?? 0 }}
-                        }, ]
+                    stroke: {
+                        width: [0, 1],
+                        curve: 'straight',
                     },
-                    {
-                        name: "Tidak Sehat",
-                        data: [{
-                            x: 'Baik',
-                            y: {{ $confusion_matrix[2][0] ?? 0 }}
-                        }, {
-                            x: 'Sedang',
-                            y: {{ $confusion_matrix[2][1] ?? 0 }}
-                        }, {
-                            x: 'Tidak Sehat',
-                            y: {{ $confusion_matrix[2][2] ?? 0 }}
-                        }, {
-                            x: 'Sangat Tidak Sehat',
-                            y: {{ $confusion_matrix[2][3] ?? 0 }}
-                        }, {
-                            x: 'Berbahaya',
-                            y: {{ $confusion_matrix[2][4] ?? 0 }}
-                        }, ]
+                    markers: {
+                        size: 1,
+                        strokeColors: '#ff0000',
                     },
-                    {
-                        name: "Sangat Tidak Sehat",
-                        data: [{
-                            x: 'Baik',
-                            y: {{ $confusion_matrix[3][0] ?? 0 }}
-                        }, {
-                            x: 'Sedang',
-                            y: {{ $confusion_matrix[3][1] ?? 0 }}
-                        }, {
-                            x: 'Tidak Sehat',
-                            y: {{ $confusion_matrix[3][2] ?? 0 }}
-                        }, {
-                            x: 'Sangat Tidak Sehat',
-                            y: {{ $confusion_matrix[3][3] ?? 0 }}
-                        }, {
-                            x: 'Berbahaya',
-                            y: {{ $confusion_matrix[3][4] ?? 0 }}
-                        }, ]
+                    plotOptions: {
+                        bar: {
+                            columnWidth: '60%',
+                            borderRadius: 5,
+                            borderRadiusApplication: 'end',
+                            dataLabels: {
+                                position: 'top',
+                            },
+                        }
                     },
-                    {
-                        name: "Berbahaya",
-                        data: [{
-                            x: 'Baik',
-                            y: {{ $confusion_matrix[4][0] ?? 0 }}
-                        }, {
-                            x: 'Sedang',
-                            y: {{ $confusion_matrix[4][1] ?? 0 }}
-                        }, {
-                            x: 'Tidak Sehat',
-                            y: {{ $confusion_matrix[4][2] ?? 0 }}
-                        }, {
-                            x: 'Sangat Tidak Sehat',
-                            y: {{ $confusion_matrix[4][3] ?? 0 }}
-                        }, {
-                            x: 'Berbahaya',
-                            y: {{ $confusion_matrix[4][4] ?? 0 }}
-                        }, ]
-                    },
-                ],
-                chart: {
-                    height: 350,
-                    type: 'heatmap',
-                },
-                plotOptions: {
-                    heatmap: {
-                        radius: 5,
-                    }
-                },
-                dataLabels: {
-                    enabled: true,
-                    background: {
+                    dataLabels: {
                         enabled: true,
-                        foreColor: '#fff',
-                        padding: 4,
-                        borderRadius: 5,
+                        enabledOnSeries: [0],
+                        style: {
+                            colors: ['#000']
+                        },
+                        background: {
+                            enabled: false,
+                        },
+                        offsetY: -20,
                     },
-                },
-                colors: ['#525ce5'],
-                xaxis: {
-                    title: {
-                        text: 'Prediksi',
+                    series: [{
+                        name: 'Akurasi',
+                        type: 'bar',
+                        data: [({{ $akurasi[0] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[1] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[2] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[3] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[4] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[5] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[6] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[7] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[8] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[9] ?? 0 }} * 100).toFixed(2)]
+                    }, {
+                        name: 'Perbandingan Persentase',
+                        type: 'line',
+                        data: [({{ $akurasi[0] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[1] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[2] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[3] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[4] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[5] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[6] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[7] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[8] ?? 0 }} * 100).toFixed(2), ({{ $akurasi[9] ?? 0 }} * 100).toFixed(2)]
+                    }],
+                    colors: ['#525ce5', '#FF0000'],
+                    xaxis: {
+                        title: {
+                            text: 'Nilai k'
+                        },
+                        categories: [{{ $test_k[0] }}, {{ $test_k[1] }}, {{ $test_k[2] }}, {{ $test_k[3] }}, {{ $test_k[4] }}, {{ $test_k[5] }}, {{ $test_k[6] }}, {{ $test_k[7] }}, {{ $test_k[8] }}, {{ $test_k[9] }}],
                     },
-                },
-                yaxis: {
-                    title: {
-                        text: 'Aktual',
+                    yaxis: {
+                        title: {
+                            text: 'Persentase (%)'
+                        }
                     },
-                },
-            };
-
-            var chart = new ApexCharts(document.querySelector("#heatmap_chart"), options);
-            chart.render();
-        </script>
-    @endpush
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(e) {
+                                return e + '%'
+                            }
+                        }
+                    },
+                };
+                var chart = new ApexCharts(document.querySelector('#column_chart_datalabel'), options)
+                chart.render();
+            </script>
+            <script>
+                var options = {
+                    chart: {
+                        height: 350,
+                        type: 'heatmap',
+                        toolbar: {
+                            show: true,
+                            tools: {
+                                download: true,
+                                selection: false,
+                                zoom: false,
+                                zoomin: false,
+                                zoomout: false,
+                                pan: false,
+                                reset: false,
+                            },
+                        }
+                    },
+                    plotOptions: {
+                        heatmap: {
+                            radius: 5,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            colors: ['#000']
+                        },
+                        background: {
+                            enabled: true,
+                            foreColor: '#fff',
+                            padding: 4,
+                            borderRadius: 5,
+                        },
+                    },
+                    series: [{
+                            name: 'Baik',
+                            data: [{
+                                x: 'Baik',
+                                y: {{ $confusion_matrix[0][0] ?? 0 }}
+                            }, {
+                                x: 'Sedang',
+                                y: {{ $confusion_matrix[0][1] ?? 0 }}
+                            }, {
+                                x: 'Tidak Sehat',
+                                y: {{ $confusion_matrix[0][2] ?? 0 }}
+                            }, {
+                                x: ['Sangat Tidak', 'Sehat'],
+                                y: {{ $confusion_matrix[0][3] ?? 0 }}
+                            }, ]
+                        },
+                        {
+                            name: 'Sedang',
+                            data: [{
+                                x: 'Baik',
+                                y: {{ $confusion_matrix[1][0] ?? 0 }}
+                            }, {
+                                x: 'Sedang',
+                                y: {{ $confusion_matrix[1][1] ?? 0 }}
+                            }, {
+                                x: 'Tidak Sehat',
+                                y: {{ $confusion_matrix[1][2] ?? 0 }}
+                            }, {
+                                x: ['Sangat Tidak', 'Sehat'],
+                                y: {{ $confusion_matrix[1][3] ?? 0 }}
+                            }, ]
+                        },
+                        {
+                            name: 'Tidak Sehat',
+                            data: [{
+                                x: 'Baik',
+                                y: {{ $confusion_matrix[2][0] ?? 0 }}
+                            }, {
+                                x: 'Sedang',
+                                y: {{ $confusion_matrix[2][1] ?? 0 }}
+                            }, {
+                                x: 'Tidak Sehat',
+                                y: {{ $confusion_matrix[2][2] ?? 0 }}
+                            }, {
+                                x: ['Sangat Tidak', 'Sehat'],
+                                y: {{ $confusion_matrix[2][3] ?? 0 }}
+                            }, ]
+                        },
+                        {
+                            name: 'Sangat Tidak Sehat',
+                            data: [{
+                                x: 'Baik',
+                                y: {{ $confusion_matrix[3][0] ?? 0 }}
+                            }, {
+                                x: 'Sedang',
+                                y: {{ $confusion_matrix[3][1] ?? 0 }}
+                            }, {
+                                x: 'Tidak Sehat',
+                                y: {{ $confusion_matrix[3][2] ?? 0 }}
+                            }, {
+                                x: ['Sangat Tidak', 'Sehat'],
+                                y: {{ $confusion_matrix[3][3] ?? 0 }}
+                            }, ]
+                        },
+                    ],
+                    colors: ['#525ce5'],
+                    xaxis: {
+                        labels: {
+                            rotate: 0,
+                        },
+                        title: {
+                            text: 'Prediksi',
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Aktual',
+                        },
+                    },
+                };
+                var chart = new ApexCharts(document.querySelector('#heatmap_chart'), options);
+                chart.render();
+            </script>
+        @endpush
+    @endif
 </x-app>
