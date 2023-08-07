@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ $title }} | Sistem Klasifikasi</title>
+    <title>@yield('title', 'App') | Sistem Klasifikasi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
     <meta name="author" content="" />
@@ -41,7 +41,7 @@
 
 <body data-sidebar="dark">
     <!-- Begin page -->
-    {{ $slot }}
+    @yield('content')
     <!-- END layout-wrapper -->
 
     <!-- JAVASCRIPT -->

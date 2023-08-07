@@ -1,4 +1,6 @@
-<x-app title="Tambah Data">
+@extends('app')
+@section('title', 'Tambah Data')
+@section('content')
     <x-preloader />
     <div id="layout-wrapper">
         <x-header />
@@ -181,4 +183,4 @@
             document.getElementById('critical').value = maxLabel;
         };
     </script>
-</x-app>
+@endsection

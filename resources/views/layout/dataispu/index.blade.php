@@ -1,4 +1,6 @@
-<x-app title="Data ISPU">
+@extends('app')
+@section('title', 'Data ISPU')
+@section('content')
     <x-preloader />
     <div id="layout-wrapper">
         <x-header />
@@ -141,4 +143,4 @@
             </script>
         @endpush
     @endif
-</x-app>
+@endsection

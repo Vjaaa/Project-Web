@@ -1,4 +1,6 @@
-<x-app title="Perhitungan">
+@extends('app')
+@section('title', 'Perhitungan')
+@section('content')
     <x-preloader />
     <div id="layout-wrapper">
         <x-header />
@@ -269,4 +271,4 @@
             </script>
         @endpush
     @endif
-</x-app>
+@endsection

@@ -1,4 +1,6 @@
-<x-app title="Latih Data">
+@extends('app')
+@section('title', 'Latih Data')
+@section('content')
     @push('dropzone-css')
         <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
     @endpush
@@ -94,4 +96,4 @@
             });
         </script>
     @endpush
-</x-app>
+@endsection
