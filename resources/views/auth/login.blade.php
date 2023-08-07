@@ -1,4 +1,6 @@
-<x-auth title="Login">
+@extends('auth')
+@section('title', 'Login')
+@section('content')
     <x-preloader />
     <div class="home-center">
         <div class="home-desc-center">
@@ -83,4 +85,4 @@
             </script>
         @endpush
     @endif
-</x-auth>
+@endsection

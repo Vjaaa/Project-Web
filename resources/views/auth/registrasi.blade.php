@@ -1,4 +1,6 @@
-<x-auth title="Registrasi">
+@extends('auth')
+@section('title', 'Registrasi')
+@section('content')
     <x-preloader />
     <div class="home-center">
         <div class="home-desc-center">
@@ -52,4 +54,4 @@
         </div>
         <!-- End Log In page -->
     </div>
-</x-auth>
+@endsection
