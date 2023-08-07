@@ -13,7 +13,8 @@
                                 <div class="page-title">
                                     <h4>Tambah Data ISPU</h4>
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('data-ispu.index') }}">Data ISPU</a></li>
                                         <li class="breadcrumb-item active">Tambah Data ISPU</li>
                                     </ol>
                                 </div>
@@ -29,15 +30,14 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="header-title">Tambah Data Baru</h4>
-                                        <p class="card-title-desc">Here are examples of <code class="highlighter-rouge">.form-control</code> applied to each textual HTML5 <code class="highlighter-rouge">&lt;input&gt;</code> <code class="highlighter-rouge">type</code>.</p>
+                                        <h4 class="header-title mb-4">Tambah Data Baru</h4>
                                         <form action="{{ route('data-ispu.store') }}" method="post">
                                             @csrf
                                             <div class="row justify-content-evenly">
                                                 <div class="col-lg-5 col-md-5 col-sm-5">
                                                     <div class="mb-3">
                                                         <label for="pm10" class="form-label">Nilai PM<sub>10</sub></label>
-                                                        <input type="number" class="input-number form-control @error('pm10') is-invalid @enderror" oninput="updateMaxValue()" name="pm10" id="pm10" value="{{ old('pm10') }}" required>
+                                                        <input type="number" class="input-number form-control @error('pm10') is-invalid @enderror" oninput="updateMaxValue()" name="pm10" id="pm10" value="{{ old('pm10') }}" autofocus required>
                                                         @error('pm10')
                                                             <div class="invalid-feedback">
                                                                 {{ $message }}
@@ -85,7 +85,7 @@
                                                     <div class="mb-3">
                                                         <label for="tanggal" class="form-label">Tanggal</label>
                                                         <div class="input-group" id="datepicker2">
-                                                            <input type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal" value="{{ $today ?? old('tanggal') }}" placeholder="tanggal-bulan-tahun" data-date-format="yyyy-mm-dd" data-date-container='#datepicker2' data-provide="datepicker" data-date-autoclose="true" required>
+                                                            <input type="text" class="form-control @error('tanggal') is-invalid @enderror" name="tanggal" id="tanggal" value="{{ $today ?? old('tanggal') }}" placeholder="tahun-bulan-tanggal" data-date-format="yyyy-mm-dd" data-date-container='#datepicker2' data-provide="datepicker" data-date-autoclose="true" required>
                                                             <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
                                                             @error('tanggal')
                                                                 <div class="invalid-feedback">
@@ -125,10 +125,10 @@
                                                 <input type="hidden" class="form-control" name="status_data" value="">
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-lg-6 col-md-6 col-sm-6 text-end">
+                                                <div class="col-6 text-end">
                                                     <button type="submit" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>Tambah Data</button>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 text-start">
+                                                <div class="col-6 text-start">
                                                     <a href="{{ route('data-ispu.index') }}" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-subdirectory-arrow-left me-2"></i>Kembali</a>
                                                 </div>
                                             </div>
