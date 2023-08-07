@@ -14,7 +14,7 @@
                                 <div class="page-title">
                                     <h4>Beranda</h4>
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="/">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Sistem Klasifikasi ISPU</a></li>
                                         <li class="breadcrumb-item active">Beranda</li>
                                     </ol>
                                 </div>
@@ -27,25 +27,6 @@
                 <div class="container-fluid">
                     <div class="page-content-wrapper">
                         <div class="row">
-                            @if (session()->has('success'))
-                                <div class="col-xl-12">
-                                    <div class="card alert alert-dismissible border border-dark p-0 mt-3 position-absolute" role="alert" style="left: 50%; transform: translate(-50%, -50%); z-index: 9998;">
-                                        <div class="card-header bg-soft-success">
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            <h5 class="font-size-16 text-success my-1">Success Alert</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="text-center">
-                                                <div class="mb-2">
-                                                    <i class="mdi mdi-checkbox-marked-circle-outline display-5 text-success"></i>
-                                                </div>
-                                                <h4 class="alert-heading font-size-18">Berhasil!</h4>
-                                                <span>{{ session('success') }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
                             <div class="col-xl-4">
                                 <div class="card">
                                     <div class="card-body">
@@ -76,6 +57,25 @@
             <x-footer />
         </div>
     </div>
+    @if (session()->has('success'))
+        @push('sweet-alert')
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    setTimeout(function() {
+                        // Tampilkan SweetAlert setelah preload selesai
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "{{ session('success') }}",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            heightAuto: false,
+                        });
+                    }, 500);
+                });
+            </script>
+        @endpush
+    @endif
     @push('chart-js')
         <!-- apexcharts -->
         <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
@@ -85,7 +85,16 @@
                     height: 350,
                     type: "bar",
                     toolbar: {
-                        show: true
+                        show: true,
+                        tools: {
+                            download: true,
+                            selection: false,
+                            zoom: false,
+                            zoomin: false,
+                            zoomout: false,
+                            pan: false,
+                            reset: false,
+                        },
                     }
                 },
                 plotOptions: {
@@ -93,29 +102,6 @@
                         horizontal: !0,
                         borderRadius: 5,
                         borderRadiusApplication: 'end',
-                        colors: {
-                            ranges: [{
-                                from: 1,
-                                to: 50,
-                                color: '#33cc33',
-                            }, {
-                                from: 51,
-                                to: 100,
-                                color: '#0070c0',
-                            }, {
-                                from: 101,
-                                to: 200,
-                                color: '#ffc000',
-                            }, {
-                                from: 201,
-                                to: 300,
-                                color: '#ff0000',
-                            }, {
-                                from: 301,
-                                to: 999999,
-                                color: '#000000',
-                            }],
-                        },
                     },
                 },
                 dataLabels: {
@@ -125,6 +111,23 @@
                 series: [{
                     name: 'Nilai',
                     data: [{{ $dataIspu->pm10 ?? 0 }}, {{ $dataIspu->so2 ?? 0 }}, {{ $dataIspu->co ?? 0 }}, {{ $dataIspu->o3 ?? 0 }}, {{ $dataIspu->no2 ?? 0 }}]
+                }],
+                colors: [function({
+                    value,
+                    seriesIndex,
+                    w
+                }) {
+                    if (value > 0 && value <= 50) {
+                        return '#33cc33'
+                    } else if (value >= 51 && value <= 100) {
+                        return '#0070c0'
+                    } else if (value >= 101 && value <= 200) {
+                        return '#ffc000'
+                    } else if (value >= 201 && value <= 300) {
+                        return '#ff0000'
+                    } else {
+                        return '#000000'
+                    }
                 }],
                 xaxis: {
                     title: {
@@ -141,11 +144,9 @@
                     offsetY: 5
                 },
             }
-
-            var chart = new ApexCharts(document.querySelector("#bar_chart"), options);
+            var chart = new ApexCharts(document.querySelector('#bar_chart'), options);
             chart.render();
         </script>
-
         <!-- knob -->
         <script src="{{ asset('assets/libs/jquery-knob/jquery.knob.min.js') }}"></script>
         <script>
@@ -155,7 +156,7 @@
                     width: 180,
                     height: 180,
                     fgColor: getColorFromValue(value),
-                    skin: "tron",
+                    skin: 'tron',
                     angleOffset: 180,
                     readOnly: true,
                     thickness: .1,
@@ -164,15 +165,15 @@
 
                 function getColorFromValue(value) {
                     if (value > 0 && value <= 50)
-                        return "#33cc33";
+                        return '#33cc33';
                     else if (value >= 51 && value <= 100)
-                        return "#0070c0";
+                        return '#0070c0';
                     else if (value >= 101 && value <= 200)
-                        return "#ffc000";
+                        return '#ffc000';
                     else if (value >= 201 && value <= 300)
-                        return "#ff0000";
+                        return '#ff0000';
                     else
-                        return "#000000";
+                        return '#000000';
                 }
             });
         </script>
