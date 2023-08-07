@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\DataIspuAPIController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\DataIspuApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('guest')->group(function () {
-    Route::get('/data-ispu/get', [DataIspuAPIController::class, 'getDataIspu']);
+    Route::get('/data-ispu/get', [DataIspuApiController::class, 'getDataIspu']);
 });
