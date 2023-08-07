@@ -5,6 +5,7 @@ use App\Http\Controllers\DataIspuController;
 use App\Http\Controllers\LatihDataController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PerhitunganController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route untuk mengecek apakah admin sudah login atau belum
+Route::get('', function () {
+    if (Auth::check()) {
+        return redirect('beranda');
+    } else {
+        return redirect('login');
+    }
+});
+
+// Route ketika admin sudah login
 Route::middleware('auth')->group(function () {
-    Route::get('', BerandaController::class)->name('beranda');
+    Route::get('beranda', BerandaController::class)->name('beranda');
 
     Route::get('data-ispu', [DataIspuController::class, 'index'])->name('data-ispu.index');
     Route::get('data-ispu/tambah-data', [DataIspuController::class, 'create'])->name('data-ispu.create');
@@ -37,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('login.logout');
 });
 
+// Route ketika admin belum login
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'authenticate'])->name('login.auth');
