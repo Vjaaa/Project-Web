@@ -6,8 +6,6 @@ use App\Http\Requests\DataIspuRequest;
 use App\Models\DataIspu;
 use App\Models\LMDWKNN;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class DataIspuController extends Controller
 {
@@ -30,8 +28,9 @@ class DataIspuController extends Controller
      */
     public function create()
     {
-        $today = Carbon::now()->format('Y-m-d');
-        return view('layout.dataispu.create', compact('today'));
+        return view('layout.dataispu.create', [
+            'today' => Carbon::now()->format('Y-m-d'),
+        ]);
     }
 
     /**
@@ -42,15 +41,19 @@ class DataIspuController extends Controller
      */
     public function store(DataIspuRequest $request)
     {
-        $data = DB::table('data_ispus')->where('status_data', 'Data Latih')->get();
-        $samples = [];
+        // Mengambil data dari database yang stasus_data = Data Latih
+        $data = DataIspu::where('status_data', 'Data Latih')->get();
+
+        // Memisah data menjadi fitur dan label
+        $features = [];
         $labels = [];
         foreach ($data as $row) {
-            $samples[] = [$row->pm10, $row->so2, $row->co, $row->o3, $row->no2];
+            $features[] = [$row->pm10, $row->so2, $row->co, $row->o3, $row->no2];
             $labels[] = $row->categori;
         }
 
-        $dataset = collect($samples)->zip($labels);
+        // Menggabung kembali fitur dan label agar memudahkan saat membagi data
+        $dataset = collect($features)->zip($labels);
 
         // Mengatur nilai seed untuk pengacakan
         $seedValue = 42; // Nilai seed yang diinginkan
@@ -70,14 +73,16 @@ class DataIspuController extends Controller
         ];
 
         // Memisahkan fitur-fitur dan label-label dari set pelatihan dan set pengujian
-        $x_train = $datasetParts['train']->pluck(0)->all();
-        $y_train = $datasetParts['train']->pluck(1)->all();
-        $x_test = [[$request->pm10, $request->so2, $request->co, $request->o3, $request->no2]];
+        $trainData = $datasetParts['train']->pluck(0)->all();
+        $trainLabel = $datasetParts['train']->pluck(1)->all();
+        $inputData = [[$request->pm10, $request->so2, $request->co, $request->o3, $request->no2]];
 
+        // Menjalankan fungsi prediksi dari model LMDWkNN
         $lmdwknn = new LMDWKNN(7);
-        $lmdwknn->fit($x_train, $y_train);
-        $prediksi = $lmdwknn->predict($x_test);
+        $lmdwknn->train($trainData, $trainLabel);
+        $prediksi = $lmdwknn->predict($inputData);
 
+        // Menambahkan data hasil prediksi ke dalam database
         DataIspu::create([
             'tanggal' => $request->tanggal,
             'pm10' => $request->pm10,
@@ -86,7 +91,7 @@ class DataIspuController extends Controller
             'o3' => $request->o3,
             'no2' => $request->no2,
             'max' => $request->max,
-            'critical' => Str::upper($request->critical),
+            'critical' => $request->critical,
             'categori' => $prediksi[0],
             'lokasi' => $request->lokasi,
             'status_data' => 'Data Uji',
@@ -114,15 +119,19 @@ class DataIspuController extends Controller
      */
     public function update(DataIspuRequest $request, DataIspu $dataIspu, $id)
     {
-        $data = DB::table('data_ispus')->where('status_data', 'Data Latih')->get();
-        $samples = [];
+        // Mengambil data dari database yang stasus_data = Data Latih
+        $data = DataIspu::where('status_data', 'Data Latih')->get();
+
+        // Memisah data menjadi fitur dan label
+        $features = [];
         $labels = [];
         foreach ($data as $row) {
-            $samples[] = [$row->pm10, $row->so2, $row->co, $row->o3, $row->no2];
+            $features[] = [$row->pm10, $row->so2, $row->co, $row->o3, $row->no2];
             $labels[] = $row->categori;
         }
 
-        $dataset = collect($samples)->zip($labels);
+        // Menggabung kembali fitur dan label agar memudahkan saat membagi data
+        $dataset = collect($features)->zip($labels);
 
         // Mengatur nilai seed untuk pengacakan
         $seedValue = 42; // Nilai seed yang diinginkan
@@ -142,14 +151,16 @@ class DataIspuController extends Controller
         ];
 
         // Memisahkan fitur-fitur dan label-label dari set pelatihan dan set pengujian
-        $x_train = $datasetParts['train']->pluck(0)->all();
-        $y_train = $datasetParts['train']->pluck(1)->all();
-        $x_test = [[$request->pm10, $request->so2, $request->co, $request->o3, $request->no2]];
+        $trainData = $datasetParts['train']->pluck(0)->all();
+        $trainLabel = $datasetParts['train']->pluck(1)->all();
+        $inputData = [[$request->pm10, $request->so2, $request->co, $request->o3, $request->no2]];
 
+        // Menjalankan fungsi prediksi dari model LMDWkNN
         $lmdwknn = new LMDWKNN(7);
-        $lmdwknn->fit($x_train, $y_train);
-        $prediksi = $lmdwknn->predict($x_test);
+        $lmdwknn->train($trainData, $trainLabel);
+        $prediksi = $lmdwknn->predict($inputData);
 
+        // Mengubah data lama menjadi data hasil prediksi baru ke dalam database
         DataIspu::find($id)->update([
             'tanggal' => $request->tanggal,
             'pm10' => $request->pm10,
@@ -158,7 +169,7 @@ class DataIspuController extends Controller
             'o3' => $request->o3,
             'no2' => $request->no2,
             'max' => $request->max,
-            'critical' => Str::upper($request->critical),
+            'critical' => $request->critical,
             'categori' => $prediksi[0],
             'lokasi' => $request->lokasi,
             'status_data' => $request->status_data,
