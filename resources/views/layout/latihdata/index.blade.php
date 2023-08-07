@@ -17,7 +17,7 @@
                                 <div class="page-title">
                                     <h4>Latih Data ISPU</h4>
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="/">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Sistem Klasifikasi ISPU</a></li>
                                         <li class="breadcrumb-item active">Latih Data ISPU</li>
                                     </ol>
                                 </div>
@@ -36,11 +36,11 @@
                                         <div class="row">
                                             <div class="col-8">
                                                 <h4 class="header-title">Latih Data Baru</h4>
-                                                <p class="card-title-desc">Latih data baru dengan cara mengupload file ke dalam kotak yang disediakan untuk dijadikan sebagai data latih.</p>
+                                                <p class="card-title-desc">Silahkan upload file <code>.csv</code> ke dalam kotak yang disediakan untuk dijadikan data latih baru.</p>
                                             </div>
                                             <div class="col-4">
                                                 <div class="text-end">
-                                                    <a href="{{ route('latih-data.download') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-file-download-outline me-2"></i>Download Template Excel</a>
+                                                    <a href="{{ route('latih-data.download') }}" class="btn btn-secondary waves-effect waves-light"><i class="mdi mdi-file-download-outline me-2"></i>Download Template CSV</a>
                                                 </div>
                                             </div>
                                         </div>
