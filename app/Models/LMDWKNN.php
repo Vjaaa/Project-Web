@@ -2,49 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Phpml\Metric\Accuracy;
 use Phpml\Metric\ClassificationReport;
 use Phpml\Metric\ConfusionMatrix;
 
-class LMDWKNN extends Model
+class LMDWKNN
 {
     private $k;
-    private $x_train;
-    private $y_train;
+    private $trainData;
+    private $trainLabel;
+    private $uniqueClass;
     private $accuracy;
-    private $confusion_matrix;
+    private $confusionMatrix;
     private $precision;
     private $recall;
-    private $f1score;
+    private $f1Score;
     private $average;
     private $support;
 
     public function __construct($k = 1)
     {
-        // tentukan nilai K
+        // Tentukan nilai K
         $this->k = $k;
     }
 
-    public function fit($x_train, $y_train)
+    public function train($trainData, $trainLabel)
     {
-        // memasukkan data latih kelas nya
-        $this->x_train = $x_train;
-        $this->y_train = $y_train;
-        $this->unique_class = array_values(array_unique($this->y_train));
+        // Memasukkan data latih kelas nya
+        $this->trainData = $trainData;
+        $this->trainLabel = $trainLabel;
+        $this->uniqueClass = array_values(array_unique($this->trainLabel));
     }
 
-    public function distance($x_test)
+    public function distance($data)
     {
-        error_reporting(E_ALL & ~E_NOTICE);
-        error_reporting(error_reporting() & ~E_WARNING);
-
-        // Calculate the Euclidean distance between $x_test and each training point
+        // Menghitung jarak antara $data dengan setiap data training menggunakan rumus Euclidean
         $distances = [];
-        foreach ($this->x_train as $originData) {
+        foreach ($this->trainData as $originData) {
             $sum = 0;
             foreach ($originData as $j => $value) {
-                $sum += pow($value - $x_test[$j], 2);
+                $sum += pow($value - $data[$j], 2);
             }
             $distances[] = sqrt($sum);
         }
@@ -53,7 +50,6 @@ class LMDWKNN extends Model
 
     public function weight($dist)
     {
-        error_reporting(E_ALL & ~E_NOTICE);
         $tmp = [];
         foreach ($dist as $val) {
             $tmp[] = 1 / (float) ($val + 1);
@@ -61,80 +57,68 @@ class LMDWKNN extends Model
         return $tmp;
     }
 
-    public function predict($x_test)
+    public function predict($data)
     {
         $predict = [];
-        foreach ($x_test as $new_point) {
-            $w_class = [];
-            foreach ($this->unique_class as $class_label) {
-                $dist = $this->distance($new_point);
-                $class_ind = array_keys($this->y_train, $class_label);
-                $dist_class = [];
-                foreach ($class_ind as $ind) {
-                    $dist_class[] =  array_slice($dist, $ind, 1)[0];
+        foreach ($data as $newPoint) {
+            $weightClass = [];
+            foreach ($this->uniqueClass as $classLabel) {
+                $dist = $this->distance($newPoint);
+                $classIndex = array_keys($this->trainLabel, $classLabel);
+                $distClass = [];
+                foreach ($classIndex as $ind) {
+                    $distClass[] =  array_slice($dist, $ind, 1)[0];
                 }
-                sort($dist_class);
-                $dist_class = array_slice($dist_class, 0, $this->k);
-                $weight = $this->weight($dist_class);
-                $w_class[] = array_sum($weight) / $this->k;
+                sort($distClass);
+                $distClass = array_slice($distClass, 0, $this->k);
+                $weight = $this->weight($distClass);
+                $weightClass[] = array_sum($weight) / $this->k;
             }
-            $keysOfMaxValues = array_keys($w_class, max($w_class));
-            $predict[] = $this->unique_class[$keysOfMaxValues[0]];
+            $keysOfMaxValues = array_keys($weightClass, max($weightClass));
+            $predict[] = $this->uniqueClass[$keysOfMaxValues[0]];
         }
         return $predict;
     }
 
-    public function score($y_true, $y_pred)
+    public function score($actualLabel, $predictedLabel)
     {
         $this->accuracy = new Accuracy();
-        return $this->accuracy->score($y_true, $y_pred);
+        return $this->accuracy->score($actualLabel, $predictedLabel);
     }
 
-    public function confusion_matrix($y_true, $y_pred)
+    public function confusion_matrix($actualLabel, $predictedLabel)
     {
-        $this->confusion_matrix = new ConfusionMatrix();
-        return $this->confusion_matrix->compute($y_true, $y_pred, ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat', 'Berbahaya']);
+        $this->confusionMatrix = new ConfusionMatrix();
+        return $this->confusionMatrix->compute($actualLabel, $predictedLabel, ['Baik', 'Sedang', 'Tidak Sehat', 'Sangat Tidak Sehat']);
     }
 
-    public function precision($y_true, $y_pred)
+    public function precision($actualLabel, $predictedLabel)
     {
-        $this->precision = new ClassificationReport($y_true, $y_pred);
+        $this->precision = new ClassificationReport($actualLabel, $predictedLabel);
         return $this->precision->getPrecision();
     }
 
-    public function recall($y_true, $y_pred)
+    public function recall($actualLabel, $predictedLabel)
     {
-        $this->recall = new ClassificationReport($y_true, $y_pred);
+        $this->recall = new ClassificationReport($actualLabel, $predictedLabel);
         return $this->recall->getRecall();
     }
 
-    public function f1Score($y_true, $y_pred)
+    public function f1Score($actualLabel, $predictedLabel)
     {
-        $this->f1score = new ClassificationReport($y_true, $y_pred);
-        return $this->f1score->getF1score();
+        $this->f1Score = new ClassificationReport($actualLabel, $predictedLabel);
+        return $this->f1Score->getF1score();
     }
 
-    public function average($y_true, $y_pred)
+    public function average($actualLabel, $predictedLabel)
     {
-        $this->average = new ClassificationReport($y_true, $y_pred);
-        return $this->average->getF1score();
+        $this->average = new ClassificationReport($actualLabel, $predictedLabel);
+        return $this->average->getAverage();
     }
 
-    public function support($y_true, $y_pred)
+    public function support($actualLabel, $predictedLabel)
     {
-        $this->support = new ClassificationReport($y_true, $y_pred);
-        return $this->support->getF1score();
-    }
-
-    public function get_params($deep = true)
-    {
-        return array("k" => $this->k);
-    }
-
-    public function set_params($params)
-    {
-        if (isset($params["k"])) {
-            $this->k = $params["k"];
-        }
+        $this->support = new ClassificationReport($actualLabel, $predictedLabel);
+        return $this->support->getSupport();
     }
 }
