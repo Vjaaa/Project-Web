@@ -13,7 +13,8 @@
                                 <div class="page-title">
                                     <h4>Edit Data ISPU</h4>
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('beranda') }}">Sistem Klasifikasi ISPU</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('data-ispu.index') }}">Data ISPU</a></li>
                                         <li class="breadcrumb-item active">Edit Data ISPU</li>
                                     </ol>
                                 </div>
@@ -29,8 +30,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="header-title">Edit Data</h4>
-                                        <p class="card-title-desc">Here are examples of <code class="highlighter-rouge">.form-control</code> applied to each textual HTML5 <code class="highlighter-rouge">&lt;input&gt;</code> <code class="highlighter-rouge">type</code>.</p>
+                                        <h4 class="header-title mb-4">Edit Data</h4>
                                         <form action="{{ route('data-ispu.update', $dataIspu) }}" method="post">
                                             @method('put')
                                             @csrf
@@ -115,21 +115,21 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="max" class="form-label">Max</label>
-                                                        <input type="number" class="form-control" name="max" id="max" value="{{ $dataIspu->max ?? 0 }}" readonly>
+                                                        <input type="number" class="form-control" name="max" id="max" value="{{ $dataIspu->max ?? old('max') }}" readonly>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="critical" class="form-label">Critical</label>
-                                                        <input type="text" class="form-control" name="critical" id="critical" value="{{ $dataIspu->critical ?? 'PM10' }}" placeholder="PM10" readonly>
+                                                        <input type="text" class="form-control" name="critical" id="critical" value="{{ $dataIspu->critical ?? old('critical') }}" placeholder="PM10" readonly>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" class="form-control" name="categori" value="{{ $dataIspu->categori ?? 'Sangat Tidak Sehat' }}">
-                                                <input type="hidden" class="form-control" name="status_data" value="{{ $dataIspu->status_data ?? null }}">
+                                                <input type="hidden" class="form-control" name="categori" value="{{ $dataIspu->categori ?? old('categori') }}">
+                                                <input type="hidden" class="form-control" name="status_data" value="{{ $dataIspu->status_data ?? old('status_data') }}">
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-lg-6 col-md-6 col-sm-6 text-end">
+                                                <div class="col-6 text-end">
                                                     <button type="submit" class="btn btn-success waves-effect waves-light"><i class="mdi mdi-plus me-2"></i>Edit Data</button>
                                                 </div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6 text-start">
+                                                <div class="col-6 text-start">
                                                     <a href="{{ route('data-ispu.index') }}" class="btn btn-danger waves-effect waves-light"><i class="mdi mdi-subdirectory-arrow-left me-2"></i>Kembali</a>
                                                 </div>
                                             </div>
