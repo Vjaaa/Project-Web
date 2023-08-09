@@ -59,25 +59,6 @@
             <x-footer />
         </div>
     </div>
-    @if (session()->has('success'))
-        @push('sweet-alert')
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    setTimeout(function() {
-                        // Tampilkan SweetAlert setelah preload selesai
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "{{ session('success') }}",
-                            showConfirmButton: false,
-                            timer: 1500,
-                            heightAuto: false,
-                        });
-                    }, 500);
-                });
-            </script>
-        @endpush
-    @endif
     @push('chart-js')
         <!-- apexcharts -->
         <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>

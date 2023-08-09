@@ -32,7 +32,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('beranda')->with('success', 'Kamu berhasil login.');
+            return redirect()->intended('beranda');
         }
 
         return back()->with('error', 'Silahkan coba login kembali!');
