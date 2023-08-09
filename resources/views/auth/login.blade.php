@@ -47,25 +47,6 @@
         </div>
         <!-- End Log In page -->
     </div>
-    @if (session()->has('success'))
-        @push('sweet-alert')
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    setTimeout(function() {
-                        // Tampilkan SweetAlert setelah preload selesai
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "{{ session('success') }}",
-                            showConfirmButton: false,
-                            timer: 1500,
-                            heightAuto: false,
-                        });
-                    }, 500);
-                });
-            </script>
-        @endpush
-    @endif
     @if (session()->has('error'))
         @push('sweet-alert')
             <script>
